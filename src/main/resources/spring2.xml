@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- єтот бин нужен для того,чтобы  можно было property записывать в отдельные файлы (у нас это пока только
+    client.properties, но может быть и больше("locations" здесь задаем в виде list))-->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <!-- искать файл .properties в classpath-->
+                <value>classpath:client.properties</value>
+            </list>
+        </property>
+        <!-- если файл .properties не найден, то по умолчанию выпадет exception, но если поставить true, то при отсутствии файла ничего не произойдет-->
+        <property name="ignoreResourceNotFound" value="true" />
+        <!-- systemPropertiesModeName - по умолчанию FALL_BACK (если ключ не найден в .properties файлах,
+        то Spring попробует найти его в системных свойствах и переменных окружения). OVERRIDE означает, что свойства
+        системы будут просмотрены первыми. Это полезно,чтобы оставить возможность переопределять свойства объекта через
+        system property, которые передаются при запуске приложения при этом задав их значения по умолчанию в .properties файлах. -->
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+    </bean>
+
+
+
+    <bean id="app" class="com.yet.spring.core.App">
+        <constructor-arg ref="client"/>
+        <!-- когда был другой конструктор в арр:-->
+       <!-- <constructor-arg ref="consoleEventLogger"/>  или -->
+        <!-- <constructor-arg ref="fileEventLogger"/> или -->
+        <!--  <constructor-arg ref="cacheFileEventLogger"/> -->
+<constructor-arg>
+    <map>
+        <entry key="INFO" value-ref="consoleEventLogger"/>
+        <entry key="ERROR" value-ref="combinedEventLogger"/>
+    </map>
+</constructor-arg>
+    </bean>
+
+    <import resource="logger.xml"/>
+ </beans>

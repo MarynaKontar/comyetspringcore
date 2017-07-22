@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <!--  <bean id="client" class="com.yet.spring.core.beans.Client">
+          <constructor-arg value="2"/>
+          <constructor-arg value="John Smith"/> -->
+          <!-- Можно указывать имя переменной в конструкторе, тип
+          <constructor-arg name = "id" value="1"/>
+          <constructor-arg name = "fullName" value="John Smith"/>
+          <constructor-arg type = "java.lang.String" value="1"/>
+          <constructor-arg type = "java.lang.String" value="John Smith"/>
+          -->
+
+        <!-- зависимости бинов можно задать и с помощью конструктора и с помощью атрибута property.
+         Если тип переменной - класс бина, то надо использовать атрибут ref вместо value.
+         Можно создавать внутренний бин (см. "event"), если значение переменной - не простой тип и не String, а например
+         java.util.Date -->
+    <!--     <property name="greeting" value="Hello there!"/>
+     </bean>-->
+     <alias name="client" alias="client2"/>
+
+     <bean id="client" class="com.yet.spring.core.beans.Client">
+         <constructor-arg value="${id}"/>
+         <constructor-arg value="${name}"/>
+         <property name="greeting" value="${greeting}"/>
+    </bean>
+
+
+</beans>
