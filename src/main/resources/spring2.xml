@@ -1,41 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <!-- єтот бин нужен для того,чтобы  можно было property записывать в отдельные файлы (у нас это пока только
-    client.properties, но может быть и больше("locations" здесь задаем в виде list))-->
+
+       xmlns:util="http://www.springframework.org/schema/util"
+
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:c="http://www.springframework.org/schema/c"
+
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+
+                           http://www.springframework.org/schema/util
+                           http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+    <!-- Подключаем дополнительный name space "util"  и с,р-->
+
+
+    <!-- этот утилитарный бин нужен для того,чтобы  можно было property записывать в отдельные файлы (у нас это пока только
+    client.properties, но может быть и больше("locations" - список файлов, которые мы хотим, чтобы он загрузил))-->
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
-                <!-- искать файл .properties в classpath-->
+                <!-- Имя файла можно указать абсолютным или относительным, а можно через classpath - искать файл .properties в classpath-->
                 <value>classpath:client.properties</value>
             </list>
         </property>
         <!-- если файл .properties не найден, то по умолчанию выпадет exception, но если поставить true, то при отсутствии файла ничего не произойдет-->
-        <property name="ignoreResourceNotFound" value="true" />
-        <!-- systemPropertiesModeName - по умолчанию FALL_BACK (если ключ не найден в .properties файлах,
-        то Spring попробует найти его в системных свойствах и переменных окружения). OVERRIDE означает, что свойства
-        системы будут просмотрены первыми. Это полезно,чтобы оставить возможность переопределять свойства объекта через
-        system property, которые передаются при запуске приложения при этом задав их значения по умолчанию в .properties файлах. -->
-        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+        <property name="ignoreResourceNotFound" value="true"/>
+        <!-- systemPropertiesModeName - по умолчанию FALLBACK (если ключ не найден в .properties файлах,
+        то Spring попробует найти его в системных свойствах и переменных окружения).
+        OVERRIDE означает, что свойства системы будут просмотрены первыми. Это полезно,чтобы оставить возможность
+        переопределять свойства объекта через system property, которые передаются при запуске приложения, при этом
+        задав их значения по умолчанию в .properties файлах.
+        NEVER - систмные свойства не рассматриваются -->
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
     </bean>
 
+<!-- Делаю утилитарній бин loggerMap, чтобы дать на него ссылку в бине app. Теперь эту map можно переиспользовать где угодно в бинах -->
+    <util:map id="loggerMap"> <!-- если прописать здесь map-class="java.util.TreeMap", будет отсортированная map-->
+        <entry key="INFO" value-ref="consoleEventLogger"/> <!--именно value-ref, а не value, а то ошибка будет-->
+        <entry key="ERROR" value-ref="combinedEventLogger"/>
 
+    </util:map>
 
-    <bean id="app" class="com.yet.spring.core.App">
+    <bean id="app" class="com.yet.spring.core.xml.App">
         <constructor-arg ref="client"/>
         <!-- когда был другой конструктор в арр:-->
-       <!-- <constructor-arg ref="consoleEventLogger"/>  или -->
+        <!-- <constructor-arg ref="consoleEventLogger"/>  или -->
         <!-- <constructor-arg ref="fileEventLogger"/> или -->
         <!--  <constructor-arg ref="cacheFileEventLogger"/> -->
-<constructor-arg>
-    <map>
-        <entry key="INFO" value-ref="consoleEventLogger"/>
-        <entry key="ERROR" value-ref="combinedEventLogger"/>
-    </map>
-</constructor-arg>
+        <constructor-arg ref="loggerMap"/>
+            <!-- Используем ссылку на утилитарную map  ref="loggerMap" вместо того, чтобі напрямую в конструктор прописывать логгеры
+            <map>
+                <entry key="INFO" value-ref="consoleEventLogger"/>
+                <entry key="ERROR" value-ref="combinedEventLogger"/>
+            </map>
+            -->
+
+
     </bean>
 
     <import resource="logger.xml"/>
- </beans>
+</beans>

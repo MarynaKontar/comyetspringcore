@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
     <!-- В конструктор класса Event подставляем внутренний bean (Date и DateFormat). Внутренне бины не будут больше
    нигде видны и перееиспользовать их нельзя, но ими можно компактно описать бин Event.
    scope="prototype" - каждый раз вызывая getBean() будем получать новый bean и его зависимости каждый раз проинжектятся
    (т.е. Date каждый раз будет актуальная, а не та, что была при создании контекста). По умолчанию scope="singletone"
     - каждый раз при запросе бина у контейнера будет возвращать один и тот же бин, который создал при инициализации-->
-    <bean id="event" class="com.yet.spring.core.loggers.Event" scope="prototype">
+    <bean id="event" class="com.yet.spring.core.xml.loggers.Event" scope="prototype">
         <constructor-arg>
             <bean class="java.util.Date"/>
         </constructor-arg>
@@ -21,10 +22,10 @@
     </bean>
 
     <!--пишет event.toString в консоль -->
-    <bean id="consoleEventLogger" class="com.yet.spring.core.loggers.ConsoleEventLogger"/>
+    <bean id="consoleEventLogger" class="com.yet.spring.core.xml.loggers.ConsoleEventLogger"/>
 
     <!--записывает event.toString в файл -->
-    <bean id="fileEventLogger" class="com.yet.spring.core.loggers.FileEventLogger" init-method="init">
+    <bean id="fileEventLogger" class="com.yet.spring.core.xml.loggers.FileEventLogger" init-method="init">
         <constructor-arg value=
                                  "simpleSpringLogger.txt">
             <!-- "C:\Users\User\IdeaProjects\comyetspringcore\src\main\java\com\yet\spring\core\loggers\simpleSpringLogger.txt"/> -->
@@ -39,14 +40,16 @@
       Также, надо, чтобы кеш сбрасывался в файл при завершении приложения. Т.е. если размер кеша еще не достиг cacheSize,
       а мы закрываем приложение, то данные из кеша должны сбрасываюттся в файл (для этого нужен метод destroy() в
       CacheFileEventLogger, а здесь и прописываем атрибут destroy-method Метод destroy() (тот метод, который прописан в
-      аттрибуте destroy-method)вызовется перед закрытием контекста.-->
-    <bean id="cacheFileEventLogger" class="com.yet.spring.core.loggers.CacheFileEventLogger"
+      аттрибуте destroy-method)вызовется перед закрытием контекста.
+      lazy-init - создастся только при первом вызове getBean()-->
+    <bean id="cacheFileEventLogger" class="com.yet.spring.core.xml.loggers.CacheFileEventLogger"
           parent="fileEventLogger"
-          destroy-method="destroy">
+          init-method="init"
+          destroy-method="destroy" lazy-init="true">
         <constructor-arg value="3"/>
     </bean>
 
-    <bean id="combinedEventLogger" class="com.yet.spring.core.loggers.CombinedEventLogger">
+    <bean id="combinedEventLogger" class="com.yet.spring.core.xml.loggers.CombinedEventLogger">
         <constructor-arg>
             <list>
                 <ref bean="consoleEventLogger"/>

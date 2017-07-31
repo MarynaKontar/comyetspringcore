@@ -1,12 +1,6 @@
-Event{id=16, msg='Some event for 1', date=22.07.2017 13:36:22}
-Event{id=84, msg='Some event for John Smith', date=22.07.2017 13:36:22}
-Event{id=87, msg='Some event for 1', date=22.07.2017 13:36:22}
-Event{id=60, msg='Some event for John Smith', date=22.07.2017 13:36:22}
-Event{id=21, msg='Some event for John Smith', date=22.07.2017 13:36:22}
-
-Event{id=30, msg='Some event for John Smith', date=22.07.2017 13:38:25}
-Event{id=84, msg='Some event for 1', date=22.07.2017 13:38:25}
-Event{id=66, msg='Some event for John Smith', date=22.07.2017 13:38:25}
-
-Event{id=89, msg='Some event for John Smith', date=22.07.2017 13:39:23}
-
+Event{id=13, msg='Some event for John Smith', date=28.07.2017 12:05:52}
+Event{id=93, msg='Some event for 1', date=28.07.2017 12:05:52}
+Event{id=55, msg='Some event for 1', date=28.07.2017 12:05:52}
+Event{id=64, msg='Some event for John Smith', date=28.07.2017 12:05:52}
+Event{id=25, msg='Some event for John Smith', date=28.07.2017 12:05:52}
+Event{id=96, msg='Some event for John Smith', date=28.07.2017 12:05:53}

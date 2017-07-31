@@ -1,4 +1,4 @@
-package com.yet.spring.core.loggers;
+package com.yet.spring.core.xml.loggers;
 
 /**
  * Created by User on 19.07.2017.

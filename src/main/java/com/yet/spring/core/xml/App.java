@@ -1,17 +1,16 @@
-package com.yet.spring.core;
+package com.yet.spring.core.xml;
 
-import com.yet.spring.core.beans.Client;
-import com.yet.spring.core.beans.EventType;
-import com.yet.spring.core.loggers.Event;
-import com.yet.spring.core.loggers.EventLogger;
-import org.springframework.context.ApplicationContext;
+import com.yet.spring.core.xml.beans.Client;
+import com.yet.spring.core.xml.beans.EventType;
+import com.yet.spring.core.xml.loggers.Event;
+import com.yet.spring.core.xml.loggers.EventLogger;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.IOException;
 import java.util.Map;
 
-import static com.yet.spring.core.beans.EventType.*;
+import static com.yet.spring.core.xml.beans.EventType.*;
 
 /**
  * Created by User on 19.07.2017.
@@ -20,7 +19,8 @@ public class App {
     private Client client;
     private Map<EventType, EventLogger> loggers;
 //    private EventLogger eventLogger;
-private static ConfigurableApplicationContext ctx;
+    private static ConfigurableApplicationContext ctx;
+
 
 //    public App(Client client, EventLogger eventLogger, Map<EventType, EventLogger> loggers) {
 //        this.client = client;
@@ -34,9 +34,9 @@ private static ConfigurableApplicationContext ctx;
     }
 
     public static void main(String[] args) throws IOException {
-//        com.yet.spring.core.App app = new com.yet.spring.core.App();
-//        app.client = new com.yet.spring.core.beans.Client("1", "John Smith");
-//        app.eventLogger = new com.yet.spring.core.loggers.ConsoleEventLogger();
+//        com.yet.spring.core.xml.App app = new com.yet.spring.core.xml.App();
+//        app.client = new com.yet.spring.core.xml.beans.Client("1", "John Smith");
+//        app.eventLogger = new com.yet.spring.core.xml.loggers.ConsoleEventLogger();
 //        app.logEvent("Some event for user 1");
 
 //        Контекст может быть считан не с одного .xml файла, а с нескольких, бины в них могут инжектить друг друга (тег ref).
@@ -61,12 +61,12 @@ private static ConfigurableApplicationContext ctx;
 //        ConfigurableApplicationContext ctx = new ClassPathXmlApplicationContext(xmls,ctx1);
 
         App app = (App) ctx.getBean("app");
-//        App app =  ctx.getBean("app", com.yet.spring.core.App.class);
-//        App app =  ctx.getBean(com.yet.spring.core.App.class);
-//        Event event1 = ctx.getBean("event", com.yet.spring.core.loggers.Event.class);
-//        Event event2 = ctx.getBean("event", com.yet.spring.core.loggers.Event.class);
-//        Event event3 = ctx.getBean("event", com.yet.spring.core.loggers.Event.class);
-//        Event event4 = ctx.getBean("event", com.yet.spring.core.loggers.Event.class);
+//        App app =  ctx.getBean("app", com.yet.spring.core.xml.App.class);
+//        App app =  ctx.getBean(com.yet.spring.core.xml.App.class);
+//        Event event1 = ctx.getBean("event", com.yet.spring.core.xml.loggers.Event.class);
+//        Event event2 = ctx.getBean("event", com.yet.spring.core.xml.loggers.Event.class);
+//        Event event3 = ctx.getBean("event", com.yet.spring.core.xml.loggers.Event.class);
+//        Event event4 = ctx.getBean("event", com.yet.spring.core.xml.loggers.Event.class);
 //        event1.setMsg("Some event for 2");
 //        event2.setMsg("Some event for 1");
 //        event3.setMsg("Some event for 2");
@@ -77,12 +77,14 @@ private static ConfigurableApplicationContext ctx;
 //        app.logEvent(event4);
 
 
-//        app.logEvent(ERROR, "Some event for 2");
+        app.logEvent(ERROR, "Some event for 2");
         app.logEvent(INFO, "Some event for 2");
-//        app.logEvent(ERROR, "Some event for 1" );
+        app.logEvent(ERROR, "Some event for 1" );
 //        app.logEvent(INFO, "Some event for 1");
-//        app.logEvent(null, "Some event for 1");
-//        app.logEvent(null, "Some event for 2");
+        app.logEvent(null, "Some event for 1");
+        app.logEvent(null, "Some event for 2");
+        app.logEvent(null, "Some event for 2");
+        app.logEvent(null, "Some event for 2");
 
 
         ctx.close();
@@ -101,12 +103,13 @@ private static ConfigurableApplicationContext ctx;
         String message = msg.replaceAll(client.getId(), client.getFullName());
         EventLogger logger = loggers.get(type);
         if(logger == null) {
-            logger = ctx.getBean("cacheFileEventLogger",com.yet.spring.core.loggers.CacheFileEventLogger.class);
+            logger = ctx.getBean("cacheFileEventLogger", com.yet.spring.core.xml.loggers.CacheFileEventLogger.class);
         }
 
-        Event event = ctx.getBean("event", com.yet.spring.core.loggers.Event.class);
+        Event event = ctx.getBean("event", com.yet.spring.core.xml.loggers.Event.class);
         event.setMsg(message);
         logger.logEvent(event);
     }
+
 }
 

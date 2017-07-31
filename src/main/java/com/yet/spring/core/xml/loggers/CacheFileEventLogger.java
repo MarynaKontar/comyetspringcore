@@ -1,12 +1,13 @@
-package com.yet.spring.core.loggers;
+package com.yet.spring.core.xml.loggers;
 
-import java.io.IOException;
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Нужен для записи event в файл, но не сразу, а после заполнения кеша
  */
+
 public class CacheFileEventLogger extends FileEventLogger{
 
 private int cacheSize;
@@ -21,10 +22,14 @@ private List<Event> cache;
     public void logEvent(Event event)  {
         if(cache==null || cache.isEmpty()) cache = new ArrayList<>();
         cache.add(event);
-        if (cache.size()>cacheSize){
+        if (cache.size()>=cacheSize){
             writeEventFromCache();
             cache.clear();
         }
+    }
+
+    public void initCache() {
+        this.cache = new ArrayList<Event>(cacheSize);
     }
 
     //делает так, чтобы кеш сбрасывался в файл при завершении приложения. Т.е. если размер кеша еще не достиг cacheSize,
@@ -34,7 +39,7 @@ private List<Event> cache;
 //    ConfigurableApplicationContext, в котором есть метод close и которій наследуется от ApplicationContext
 
     public void destroy(){
-        if (!cache.isEmpty())
+        if (!cache.isEmpty() && cache != null)
             writeEventFromCache();
     }
 

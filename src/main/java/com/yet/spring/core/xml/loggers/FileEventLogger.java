@@ -1,4 +1,4 @@
-package com.yet.spring.core.loggers;
+package com.yet.spring.core.xml.loggers;
 
 import org.apache.commons.io.FileUtils;
 
@@ -33,7 +33,7 @@ public FileEventLogger(String filename) {
 //        System.out.println(event.toString());
 //        System.out.println(file.getAbsolutePath().toString() );
         try {
-            FileUtils.writeStringToFile(file,event.toString(),true);
+            FileUtils.writeStringToFile(file,event.toString() + "\n",true);
         } catch (IOException e) {
             e.printStackTrace();
         }
