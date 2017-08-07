@@ -10,7 +10,7 @@
        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
     <!-- Подключаем дополнительный name space: с,р-->
 
-    <!--  <bean id="client" clacom.yet.spring.core.xml.beanseans.Client">
+    <!--  <bean id="client" class = com.yet.spring.core.xml.beans.Client">
           <constructor-arg value="2"/>
           <constructor-arg value="John Smith"/> -->
           <!-- Можно указывать имя переменной в конструкторе, тип
@@ -29,7 +29,7 @@
      <alias name="client" alias="client2"/>
 
     <!--
-    <bean id="client" clacom.yet.spring.core.xml.beanseans.Client">
+    <bean id="client" class = com.yet.spring.core.xml.beans.Client">
         <constructor-arg value="${id}"/> <!- это значение перебьет то ,что в client.properties ->
         <constructor-arg value="${name}"/>
         <property name="greeting" value="${greeting}"/>
@@ -40,10 +40,11 @@
     name space c: или c-ref:) и property (тег <property/> соотв. р: или р-ref:(ссылка на др. бин))
      Но надо не забыть подключить name space в в теге beans (xmlns:p="http://www.springframework.org/schema/p"
        xmlns:c="http://www.springframework.org/schema/c")
-       Получается, что здесь мы используем не отдельные теги, а атрибуты тега bean (c и p) -->
+       Получается, что здесь мы используем не отдельные теги, а атрибуты тега bean (c и p)
+        берем из client.properties -->
     <bean id="client" class="com.yet.spring.core.xml.beans.Client"
-          c:id="${id}"
-          c:fullName="${name}"
-          p:greeting="${greeting}" />
+           c:id="${id}"
+           c:fullName="${name}"
+           p:greeting="${greeting}" />
 
-</beans>
+ </beans>

@@ -17,6 +17,9 @@
     <!-- Подключаем дополнительный name space "util"  и с,р-->
 
 
+   <!-- Подсоеденяем другие .xml файлы. -->
+    <import resource="logger.xml"/>
+
     <!-- этот утилитарный бин нужен для того,чтобы  можно было property записывать в отдельные файлы (у нас это пока только
     client.properties, но может быть и больше("locations" - список файлов, которые мы хотим, чтобы он загрузил))-->
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -24,6 +27,7 @@
             <list>
                 <!-- Имя файла можно указать абсолютным или относительным, а можно через classpath - искать файл .properties в classpath-->
                 <value>classpath:client.properties</value>
+                <value>classpath:db.properties</value>
             </list>
         </property>
         <!-- если файл .properties не найден, то по умолчанию выпадет exception, но если поставить true, то при отсутствии файла ничего не произойдет-->
@@ -37,7 +41,7 @@
         <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
     </bean>
 
-<!-- Делаю утилитарній бин loggerMap, чтобы дать на него ссылку в бине app. Теперь эту map можно переиспользовать где угодно в бинах -->
+    <!-- Делаю утилитарній бин loggerMap, чтобы дать на него ссылку в бине app. Теперь эту map можно переиспользовать где угодно в бинах -->
     <util:map id="loggerMap"> <!-- если прописать здесь map-class="java.util.TreeMap", будет отсортированная map-->
         <entry key="INFO" value-ref="consoleEventLogger"/> <!--именно value-ref, а не value, а то ошибка будет-->
         <entry key="ERROR" value-ref="combinedEventLogger"/>
@@ -51,15 +55,32 @@
         <!-- <constructor-arg ref="fileEventLogger"/> или -->
         <!--  <constructor-arg ref="cacheFileEventLogger"/> -->
         <constructor-arg ref="loggerMap"/>
-            <!-- Используем ссылку на утилитарную map  ref="loggerMap" вместо того, чтобі напрямую в конструктор прописывать логгеры
-            <map>
-                <entry key="INFO" value-ref="consoleEventLogger"/>
-                <entry key="ERROR" value-ref="combinedEventLogger"/>
-            </map>
-            -->
-
-
+        <!-- Используем ссылку на утилитарную map  ref="loggerMap" вместо того, чтобі напрямую в конструктор прописывать логгеры
+        <map>
+            <entry key="INFO" value-ref="consoleEventLogger"/>
+            <entry key="ERROR" value-ref="combinedEventLogger"/>
+        </map>
+        -->
     </bean>
 
-    <import resource="logger.xml"/>
+    <!-- добавляю этот бин для подключения БД с помощью jdbc.
+     В конструктор передаем dataSource - обобщенная фабрика, создающая connection к БД. Она скрівает детали подключения
+       и управления транзакциями от разаработчика. Т. е. ему достаточно только определить параметры подключения.
+     Найти как это сделать с помощью Hibernate-->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <constructor-arg ref="dataSource"/>
+    </bean>
+
+    <!-- В Spring есть реализация dataSource ,но она очень простая и не позволяет создать pool connections, поэтому мы ее
+     применим тут только в качестве тестирования (на production будем созд. pool)
+     Данные по БД запишем в db.properties(д.б. с маленькой букі, иначе ошибка !!!!!), чтобы легче и быстрее было их менять. И не забыть db.properties прописать
+     в бине PropertyPlaceholderConfigurer-->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+
+          p:driverClassName="${jdbc.driverClassName}"
+          p:url="${jdbc.url}"
+          p:username="${jdbc.username}"
+          p:password="${jdbc.password}"/>
+
+
 </beans>

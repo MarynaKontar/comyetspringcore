@@ -54,8 +54,17 @@
             <list>
                 <ref bean="consoleEventLogger"/>
                 <ref bean="fileEventLogger"/>
+                <ref bean="dbLogger"/>
             </list>
         </constructor-arg>
     </bean>
 
+
+    <bean id="dbLogger" class="com.yet.spring.core.xml.loggers.DBLogger"
+          init-method="init"
+          destroy-method="destroy">
+        <property name="jdbcTemplate" ref="jdbcTemplate"/>
+
+
+    </bean>
 </beans>
